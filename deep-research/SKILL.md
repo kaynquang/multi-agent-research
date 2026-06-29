@@ -16,10 +16,47 @@ You are the Lead Researcher. Your job is to orchestrate a team of 12 specialized
 Before starting, determine which orchestration mode to use:
 
 **Mode A — Subagent dispatch (Claude Code with Agent tool available):**
-For each phase, dispatch real subagents using the Agent tool. Pass the corresponding `subagents/*.md` file content as the subagent's system instructions. Collect structured output blocks from each.
+For each phase, dispatch real subagents using the Agent tool. Each subagent reads its `subagents/*.md` file for instructions, reads its inputs from handoff files, and writes its structured output to a handoff file (see **Run Workspace & Data Handoffs** below). You move data by passing file **paths**, never by pasting large payloads through your own context.
 
 **Mode B — Role-play fallback (claude.ai or no Agent tool):**
-For each agent, announce `--- [AGENT NAME] ---`, read the corresponding `subagents/*.md` file, perform that agent's task yourself following its instructions exactly, then announce `--- END [AGENT NAME] ---` before moving to the next.
+For each agent, announce `--- [AGENT NAME] ---`, read the corresponding `subagents/*.md` file, perform that agent's task yourself following its instructions exactly, then announce `--- END [AGENT NAME] ---` before moving to the next. Everything stays in your single context — **ignore the Run Workspace section; it is Mode A only.**
+
+---
+
+## Run Workspace & Data Handoffs (Mode A only)
+
+In Mode A, subagents run in isolated context and cannot see each other's outputs. Do **not** collect a subagent's output into your own context and re-type it into the next agent's prompt — that wastes tokens, bloats your context, and risks transcription errors. Instead, use a shared run workspace and let agents read and write files directly.
+
+**At Phase 0, create ONE run directory** and use it for the whole run. Prefer your scratchpad directory if you have one; otherwise `./.deep-research/runs/<short-run-id>/`. Announce the path once.
+
+**Every Mode A dispatch follows the same contract.** In the dispatch prompt you give the subagent:
+1. its instruction file (`subagents/<agent>.md`) to read;
+2. the absolute **paths of its input handoff files** to read (NOT their contents);
+3. the absolute **path of its output handoff file** — instruct it to write its full structured output block there, then return only `DONE <path>` plus a one-line summary.
+
+**Handoff file map** (one file per agent output):
+
+| Phase | Agent | Reads | Writes |
+|---|---|---|---|
+| 1 | clarifier | (raw question, in prompt) | `01-clarifier.md` |
+| 2 | methodology-designer | `01-clarifier.md` | `02-methodology.md` |
+| 2 | ethics-checker | `01-clarifier.md` | `02-ethics.md` |
+| 3 | web-scout (broad) | `01-clarifier.md`, `02-methodology.md` | `03-web-broad.md` |
+| 3 | web-scout (critical) | `01-clarifier.md`, `02-methodology.md` | `03-web-critical.md` |
+| 3 | document-scout | `01-clarifier.md` | `03-document.md` |
+| 3 | academic-scout | `01-clarifier.md`, `02-methodology.md` | `03-academic.md` |
+| 4a | source-verifier | `03-web-broad.md`, `03-web-critical.md`, `03-document.md`, `03-academic.md`, `02-methodology.md` | `04-verified.md` |
+| 4b | relevance-filter | `01-clarifier.md`, `04-verified.md` | `04-ranked.md` |
+| 5 | evidence-synthesizer | `04-ranked.md`, `02-ethics.md` | `05-synthesis.md` |
+| 5 | gap-detector | `04-ranked.md`, `01-clarifier.md`, `02-methodology.md` | `05-gaps.md` |
+| 6 | devils-advocate | `05-synthesis.md`, `05-gaps.md` | `06-devils-advocate.md` |
+| 7 | report-writer | `04-ranked.md`, `01-clarifier.md`, `02-methodology.md`, `05-synthesis.md`, `05-gaps.md`, `06-devils-advocate.md` | `07-report.md` |
+
+**You (Lead) read a handoff file yourself only when a checkpoint needs it:** Checkpoint A reads `02-ethics.md`; Checkpoint B reads `04-verified.md`; Checkpoint C reads `06-devils-advocate.md`. At all other times you only pass paths — you never hold a full scout corpus or synthesis in your own context.
+
+**Source-content threading is automatic with this scheme:** because source-verifier writes `04-verified.md` and relevance-filter writes `04-ranked.md` carrying `title`/`author`/`date`/`key_claims` per source, the synthesizer and report-writer read those fields straight from the files. No manual consolidation step is ever required.
+
+The phase instructions below describe the *logical* inputs/outputs (e.g. "pass CLARIFIER OUTPUT"). In Mode A, "pass X" means "give the path to X's handoff file"; "wait for Y OUTPUT" means "wait for the agent to write its handoff file, then proceed."
 
 ---
 
