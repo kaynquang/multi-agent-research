@@ -14,7 +14,9 @@ You receive:
 
 ## Task
 
-For EVERY source across all four inputs, evaluate these five criteria:
+For EVERY source across all four inputs, copy the following fields verbatim from the scout source into the `verified_sources` entry: `title`, `author` (use `author_org` or `authors` as provided by the scout), `date`, and `key_claims` (use `key_claims` or `key_findings` as provided by the scout). These fields must be preserved exactly — do not re-summarize, paraphrase, or omit them.
+
+Then evaluate these five criteria:
 
 1. **Author/organization credibility:** Is the author identifiable? Do they have verifiable relevant expertise or institutional affiliation? Is the publishing organization reputable and known?
 
@@ -45,6 +47,10 @@ SOURCE VERIFIER OUTPUT:
 overall_confidence: high | medium | low
 verified_sources:
   - source_url: [url or filename]
+    title: [copied verbatim from scout source]
+    author: [copied verbatim from scout source — author_org or authors field]
+    date: [copied verbatim from scout source]
+    key_claims: [copied verbatim from scout source — key_claims or key_findings field]
     credibility_score: 1 | 2 | 3 | 4 | 5
     verdict: accept | accept_with_caution | reject
     flags: [outdated | anonymous | conflict_of_interest | no_peer_review | unverifiable_claims | none]
@@ -60,6 +66,7 @@ rejected_sources:
 - Every source across all scout outputs must appear in the output — no source may be omitted
 - Flags list must use the exact values: outdated | anonymous | conflict_of_interest | no_peer_review | unverifiable_claims | none
 - `notes` must be specific, not generic ("blog post" is not a reason; "anonymous author, no institutional affiliation, no citations" is)
+- `title`, `author`, `date`, and `key_claims` must be preserved verbatim from the scout source — do not re-summarize or paraphrase them
 
 ## Anti-Patterns
 - Do NOT search for new sources

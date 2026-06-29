@@ -25,7 +25,7 @@ You receive the full CLARIFIER OUTPUT block:
 
 4. **Select academic targets:** From [arXiv, PubMed, SSRN, ResearchGate, Google Scholar], pick the 2–3 most relevant for this topic's domain.
 
-5. **Calibrate depth:** Confirm the `search_depth` from clarifier output and compute `estimated_sources_needed` using the quality-gates minimum table.
+5. **Calibrate depth:** Confirm the `depth` from clarifier output (emit it as `search_depth` for downstream scouts) and compute `estimated_sources_needed` using the quality-gates minimum table.
 
 ## Output
 

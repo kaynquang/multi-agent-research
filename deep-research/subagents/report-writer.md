@@ -19,7 +19,10 @@ You receive:
 - `theme_challenges`: from DEVIL'S ADVOCATE OUTPUT
 - `consensus_challenge`: from DEVIL'S ADVOCATE OUTPUT
 - `overall_assessment`: from DEVIL'S ADVOCATE OUTPUT
-- `ranked_sources`: from RELEVANCE FILTER OUTPUT (all sources with keep: true)
+- `ranked_sources`: from RELEVANCE FILTER OUTPUT (all sources with keep: true). Each entry carries `title`, `author`, `date`, and `key_claims` — use these to build the References section (Title — Author — URL — credibility) and to cite factual claims accurately.
+- `sources_in`: total source count across all scouts (passed from RELEVANCE FILTER OUTPUT)
+- `sources_out`: count of sources with keep: true (passed from RELEVANCE FILTER OUTPUT)
+- `verified_source_count`: count of sources with verdict: accept (score ≥ 3) from SOURCE VERIFIER OUTPUT — use for the "Sources verified" header field
 
 ## Task
 

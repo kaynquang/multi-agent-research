@@ -87,8 +87,9 @@ Pass:
 Wait for SOURCE VERIFIER OUTPUT.
 
 **[CHECKPOINT B]** Review SOURCE VERIFIER OUTPUT:
-- If `overall_confidence: low` OR count of sources with `verdict: accept` or `accept_with_caution` < 3:
-  > "Verification found insufficient sources ([N] sources passed). Would you like me to: (1) Broaden the search with wider keywords and re-run scouts, or (2) Continue with current sources and explicitly flag the confidence limitation in the report?"
+- Determine the depth-based minimum from `references/quality-gates.md`: quick = 3, standard = 5, deep = 8 (use the `depth` from the CLARIFIER OUTPUT).
+- If `overall_confidence: low` OR count of sources with `verdict: accept` (score ≥ 3) < depth minimum:
+  > "Verification found insufficient sources ([N] sources with verdict: accept vs. minimum [M] required for [depth] depth). Would you like me to: (1) Broaden the search with wider keywords and re-run scouts, or (2) Continue with current sources and explicitly flag the confidence limitation in the report?"
   Wait for user response. If option 1: loop back to Phase 2 with broader `search_depth`; if option 2: continue.
 
 **Step 4b:** Dispatch **Relevance Filter** (`subagents/relevance-filter.md`).
@@ -102,7 +103,7 @@ If `insufficient_sources_warning` is non-empty → include this in the report's 
 ### Phase 5: Synthesis + Gap Analysis (parallel)
 
 Dispatch simultaneously:
-- **Evidence Synthesizer** (`subagents/evidence-synthesizer.md`) — pass: `research_question`, `ranked_sources` (keep: true only), and `ethics_notes` (this is the `notes` field from the ETHICS CHECKER OUTPUT — pass it under the name `ethics_notes`)
+- **Evidence Synthesizer** (`subagents/evidence-synthesizer.md`) — pass: `research_question`, `ranked_sources` (keep: true only; note: each entry now carries `title`, `author`, `date`, and `key_claims` threaded from the scout outputs), and `ethics_notes` (this is the `notes` field from the ETHICS CHECKER OUTPUT — pass it under the name `ethics_notes`)
 - **Gap Detector** (`subagents/gap-detector.md`) — pass: `research_question`, `scope`, `constraints`, full RELEVANCE FILTER OUTPUT, `keyword_clusters` and `academic_targets` from methodology-designer
 
 Wait for both outputs.
@@ -134,7 +135,8 @@ Pass ALL of the following:
 - EVIDENCE SYNTHESIZER OUTPUT (themes, contradictions, consensus_statement, overall_confidence)
 - GAP DETECTOR OUTPUT (gaps, unanswered_questions, recommended_followup)
 - DEVIL'S ADVOCATE OUTPUT (theme_challenges, consensus_challenge, overall_assessment)
-- RELEVANCE FILTER OUTPUT (ranked_sources, all with keep: true)
+- RELEVANCE FILTER OUTPUT (ranked_sources, all with keep: true; also pass `sources_in` and `sources_out` from this output)
+- `verified_source_count`: count of sources with `verdict: accept` (score ≥ 3) from SOURCE VERIFIER OUTPUT
 
 Wait for the final report. Present it directly to the user.
 
@@ -148,8 +150,8 @@ After presenting the report, always offer:
 >
 > Options:
 > 1. Dig deeper into any specific section or finding
-> 2. Start writing an academic paper from this research (uses the academic-paper skill)
-> 3. Get a peer review of the findings (uses the academic-paper-reviewer skill)
+> 2. Start writing an academic paper from this research (uses the academic-paper skill, if installed)
+> 3. Get a peer review of the findings (uses the academic-paper-reviewer skill, if installed)
 > 4. Run a follow-up research on one of the recommended questions above"
 
 ---

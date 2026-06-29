@@ -28,6 +28,8 @@ You receive:
 
 6. **Sort:** `ranked_sources` list must be ordered by `relevance_score` descending, then `credibility_score` descending for ties.
 
+7. **Carry content fields:** Copy `title`, `author`, `date`, and `key_claims` unchanged from each source-verifier entry into the corresponding `ranked_sources` entry. Do not modify or re-summarize these fields.
+
 ## Output
 
 Return ONLY this structured block:
@@ -38,6 +40,10 @@ sources_in: [N — count of sources received with verdict: accept or accept_with
 sources_out: [N — count of sources with keep: true]
 ranked_sources:
   - source_url: [url or filename]
+    title: [carried unchanged from source-verifier entry]
+    author: [carried unchanged from source-verifier entry]
+    date: [carried unchanged from source-verifier entry]
+    key_claims: [carried unchanged from source-verifier entry]
     relevance_score: 1 | 2 | 3 | 4 | 5
     credibility_score: [copied from source-verifier, unchanged]
     keep: true | false
