@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: Multi-agent research skill that coordinates 13 specialized agents to conduct thorough, verified, cited research. Use when the user asks to research a topic, investigate a question, compile evidence, or produce a cited research report on any subject. Triggers on phrases like "research X", "investigate Y", "what does the evidence say about Z", "give me a thorough analysis of", "I need a deep dive on", or any question requiring multi-source evidence gathering.
+description: Multi-agent research skill that coordinates a lead researcher and 12 specialist agents to conduct thorough, verified, cited research. Use when the user asks to research a topic, investigate a question, compile evidence, or produce a cited research report on any subject. Triggers on phrases like "research X", "investigate Y", "what does the evidence say about Z", "give me a thorough analysis of", "I need a deep dive on", or any question requiring multi-source evidence gathering.
 ---
 
 # Deep Research — Lead Researcher
@@ -102,7 +102,7 @@ If `insufficient_sources_warning` is non-empty → include this in the report's 
 ### Phase 5: Synthesis + Gap Analysis (parallel)
 
 Dispatch simultaneously:
-- **Evidence Synthesizer** (`subagents/evidence-synthesizer.md`) — pass: `research_question`, `ranked_sources` (keep: true only), `ethics_notes` from ethics-checker
+- **Evidence Synthesizer** (`subagents/evidence-synthesizer.md`) — pass: `research_question`, `ranked_sources` (keep: true only), and `ethics_notes` (this is the `notes` field from the ETHICS CHECKER OUTPUT — pass it under the name `ethics_notes`)
 - **Gap Detector** (`subagents/gap-detector.md`) — pass: `research_question`, `scope`, `constraints`, full RELEVANCE FILTER OUTPUT, `keyword_clusters` and `academic_targets` from methodology-designer
 
 Wait for both outputs.
@@ -127,7 +127,7 @@ Wait for DEVIL'S ADVOCATE OUTPUT.
 Dispatch **Report Writer** (`subagents/report-writer.md`).
 
 Pass ALL of the following:
-- `research_question_refined` from clarifier
+- `research_question_refined` (this is the `research_question` field from CLARIFIER OUTPUT — pass it under the name `research_question_refined`)
 - `language` from clarifier
 - `scope` from clarifier
 - METHODOLOGY DESIGNER OUTPUT (for methodology_summary)
