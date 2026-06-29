@@ -1,59 +1,75 @@
-# multi-agent-research
+# deep-research
 
-Một bộ skill nghiên cứu học thuật cho Claude, xây theo kiến trúc **multi-agent chuyên môn hóa** — mỗi skill không phải một agent duy nhất mà là một đội agent, mỗi agent chịu trách nhiệm cho một phần công việc.
+A multi-agent research skill for Claude. Instead of one agent doing everything, `deep-research` coordinates **1 Lead Researcher + 12 specialist agents** across 7 phases, with 3 quality-control checkpoints.
 
-> Triết lý cốt lõi: *Agent kiểm chứng nguồn không viết bài. Agent viết bài không tự quyết định citation. Agent phản biện không chỉ khen mà phải chỉ ra điểm yếu, giả định ẩn và rủi ro lập luận.*
+> Core principle: *the source verifier doesn't write the report. The writer doesn't decide which citations are valid. The critic doesn't just praise — it surfaces weak points, hidden assumptions, and reasoning risks.* Each agent is accountable for one part of the work.
 
-## Skill đầu tiên: `deep-research` (13 agent)
+## How it works
 
-`deep-research/` điều phối **1 Lead Researcher + 12 subagent chuyên môn** qua 7 pha, với 3 checkpoint kiểm soát chất lượng.
+| Phase | Agent(s) | Responsibility |
+|-------|----------|----------------|
+| 1 | `clarifier` | Clarify the question; set scope, language, and depth |
+| 2 | `methodology-designer` + `ethics-checker` | Design the search strategy + check for bias/ethics *(parallel)* |
+| 3 | `web-scout` ×2 + `document-scout` + `academic-scout` | Find sources: web (broad + critical angles), user documents, academic *(parallel)* |
+| 4 | `source-verifier` → `relevance-filter` | Score source credibility → rank & dedupe |
+| 5 | `evidence-synthesizer` + `gap-detector` | Synthesize evidence + find research gaps *(parallel)* |
+| 6 | `devils-advocate` | Adversarial review: weak points, hidden assumptions, reasoning risks |
+| 7 | `report-writer` | Write the cited report, in the language of the question |
 
-| Pha | Agent | Trách nhiệm |
-|-----|-------|-------------|
-| 1 | clarifier | Làm rõ câu hỏi, xác định scope/ngôn ngữ/độ sâu |
-| 2 | methodology-designer + ethics-checker | Thiết kế chiến lược tìm kiếm + kiểm tra bias/đạo đức *(song song)* |
-| 3 | web-scout ×2 + document-scout + academic-scout | Tìm nguồn web (góc rộng + phản biện), tài liệu người dùng, học thuật *(song song)* |
-| 4 | source-verifier → relevance-filter | Kiểm chứng độ tin cậy → sàng lọc & xếp hạng |
-| 5 | evidence-synthesizer + gap-detector | Tổng hợp bằng chứng + phát hiện khoảng trống *(song song)* |
-| 6 | devils-advocate | Phản biện ngược: điểm yếu, giả định ẩn, rủi ro lập luận |
-| 7 | report-writer | Viết báo cáo có trích dẫn, theo ngôn ngữ câu hỏi |
+**Checkpoints:** A — halt on ethical concerns · B — warn when verified sources fall below the depth-based minimum · C — loop back if the adversarial review finds a critical flaw.
 
-**Checkpoints:** A (dừng nếu có vấn đề đạo đức) · B (cảnh báo nếu thiếu nguồn đã kiểm chứng) · C (loop lại nếu phản biện phát hiện lỗi nghiêm trọng).
+Each agent is defined with a fixed contract: **Role + Task + Input + Output + Quality Standards + Anti-Patterns.**
 
-### Mỗi agent định nghĩa theo công thức
-**Vai trò + Nhiệm vụ + Đầu vào + Đầu ra + Tiêu chuẩn chất lượng + Anti-Patterns**
+- **Sources:** web (search + fetch), user-provided documents, Google Drive.
+- **Output:** a structured, cited research report; output language follows the question's language automatically.
 
-### Nguồn dữ liệu
-Web (search + fetch) · tài liệu người dùng cung cấp · Google Drive.
+## Installation
 
-### Đầu ra
-Báo cáo nghiên cứu có cấu trúc + trích dẫn, ngôn ngữ tự động theo ngôn ngữ câu hỏi.
+Clone the repo, then make the `deep-research/` folder available as a skill.
 
-## Cách dùng
+### Claude Code
 
-Cài như một Claude skill (Claude Code / claude.ai). Skill tự kích hoạt khi bạn yêu cầu nghiên cứu một chủ đề, điều tra một câu hỏi, hoặc cần một báo cáo có trích dẫn.
+Personal skills live in `~/.claude/skills/`. Copy (or symlink) the skill folder there:
 
-- **Claude Code:** dispatch subagent thật, chạy song song trong từng pha (Mode A).
-- **claude.ai / môi trường không có subagent:** Lead Researcher đóng từng vai tuần tự theo đúng quy trình (Mode B fallback).
+```bash
+git clone https://github.com/kaynquang/multi-agent-research.git
+cp -r multi-agent-research/deep-research ~/.claude/skills/deep-research
+```
 
-## Cấu trúc
+Or scope it to a single project instead of globally:
+
+```bash
+mkdir -p .claude/skills
+cp -r multi-agent-research/deep-research .claude/skills/deep-research
+```
+
+Restart Claude Code (or start a new session). The skill auto-activates when you ask it to research something.
+
+### claude.ai (web/desktop)
+
+1. Zip the skill folder: `cd multi-agent-research && zip -r deep-research.zip deep-research`
+2. In claude.ai, go to **Settings → Capabilities → Skills** and upload `deep-research.zip`.
+
+## Usage
+
+Once installed, the skill activates automatically when you make a research request, e.g.:
+
+```
+Research the impact of AI on the Vietnamese labor market
+```
+
+The Lead Researcher then runs the full 7-phase pipeline and returns a cited report.
+
+- **Claude Code:** dispatches real subagents, running them in parallel within each phase (Mode A).
+- **claude.ai / environments without subagents:** the Lead Researcher plays each role sequentially, following the same process and checkpoints (Mode B fallback).
+
+## Structure
 
 ```
 deep-research/
-├── SKILL.md              # Lead Researcher + orchestration 7 pha
-├── subagents/            # 12 agent chuyên môn (mỗi file 1 agent)
+├── SKILL.md              # Lead Researcher + 7-phase orchestration
+├── subagents/            # 12 specialist agents (one file each)
 └── references/
-    ├── quality-gates.md  # Rubric tin cậy + logic checkpoint
-    └── output-format.md  # Template báo cáo cuối
+    ├── quality-gates.md  # Credibility rubric + checkpoint logic
+    └── output-format.md  # Final report template
 ```
-
-## Lộ trình (framework)
-
-`deep-research` là skill nền tảng. Các skill tiếp theo trong framework:
-- `academic-paper` — viết bài học thuật từ kết quả research
-- `academic-paper-reviewer` — peer review
-- `academic-pipeline` — điều phối cả 3 skill trên theo trình tự
-
-## Tài liệu thiết kế
-
-Spec và implementation plan đầy đủ trong [docs/superpowers/](docs/superpowers/).
