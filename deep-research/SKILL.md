@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: Multi-agent research skill that coordinates a lead researcher and 12 specialist agents to conduct thorough, verified, cited research. Use when the user asks to research a topic, investigate a question, compile evidence, or produce a cited research report on any subject. Triggers on phrases like "research X", "investigate Y", "what does the evidence say about Z", "give me a thorough analysis of", "I need a deep dive on", or any question requiring multi-source evidence gathering.
+description: Multi-agent deep research and autonomous research-assistant skill. Coordinates a lead researcher and 12 specialist agents to run an end-to-end research workflow — clarify the question, search the web plus user-provided documents and Google Drive, verify and credibility-score every source, synthesize evidence, detect research gaps, adversarially red-team the conclusions, and produce a cited, structured research report in the question's language. Use for deep research, literature review, fact-checking, source verification, evidence synthesis, competitive/market research, due diligence, or any request to investigate a topic and produce a cited report. Triggers on phrases like "research X", "do a deep dive on", "investigate Y", "what does the evidence say about Z", "find sources on", "literature review of", "fact-check", "compile evidence", "give me a thorough/cited analysis of", or any question requiring multi-source, verified, cited research.
 ---
 
 # Deep Research — Lead Researcher
