@@ -1,4 +1,4 @@
-# 🔬 deep-research — A 13-Agent AI Research Team for Claude
+# deep-research — A 13-Agent AI Research Team for Claude
 
 **Turn one question into a fully-researched, fact-checked, cited report — automatically.**
 
@@ -8,21 +8,21 @@
 
 ---
 
-## ⚡ What you get
+## What you get
 
-- 🧠 **13 specialized agents**, 7 phases, 3 quality gates — orchestrated end to end
-- ✅ **Source verification built in** — every source scored 1–5 for credibility; weak sources flagged or dropped
-- 🌐 **Searches everywhere** — web, your uploaded documents, and Google Drive
-- 🔴 **Adversarial review** — a dedicated devil's-advocate agent surfaces hidden assumptions and reasoning risks before you ever see the report
-- 🕳️ **Gap detection** — tells you what the evidence *doesn't* cover, not just what it does
-- 🌍 **Answers in your language** — ask in Vietnamese, get a Vietnamese report; ask in English, get English
-- 📑 **Cited, structured output** — executive summary, findings, contradictions, gaps, critical assessment, references
+- **13 specialized agents**, 7 phases, 3 quality gates — orchestrated end to end
+- **Source verification built in** — every source scored 1–5 for credibility; weak sources flagged or dropped
+- **Searches everywhere** — web, your uploaded documents, and Google Drive
+- **Adversarial review** — a dedicated devil's-advocate agent surfaces hidden assumptions and reasoning risks before you ever see the report
+- **Gap detection** — tells you what the evidence *doesn't* cover, not just what it does
+- **Answers in your language** — ask in Vietnamese, get a Vietnamese report; ask in English, get English
+- **Cited, structured output** — executive summary, findings, contradictions, gaps, critical assessment, references
 
 **Keywords:** AI research agent · multi-agent research · deep research · autonomous research assistant · automated literature review · AI fact-checking · source verification · cited research reports · Claude skill · Claude Code · research automation · academic research assistant.
 
 ---
 
-## 🚀 Install
+## Install
 
 Clone the repo and drop the `deep-research/` folder into your skills directory.
 
@@ -50,7 +50,7 @@ Then upload `deep-research.zip` in **Settings → Capabilities → Skills**.
 
 ---
 
-## 🎯 Use it
+## Use it
 
 Just ask:
 
@@ -68,7 +68,7 @@ The Lead Researcher takes it from there and hands back a cited report.
 
 ---
 
-## 🧩 How it works
+## How it works
 
 | Phase | Agent(s) | Job |
 |-------|----------|-----|
@@ -90,7 +90,7 @@ Every agent follows one contract: **Role + Task + Input + Output + Quality Stand
 
 ---
 
-## 📁 Structure
+## Structure
 
 ```
 deep-research/
