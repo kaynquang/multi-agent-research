@@ -20,7 +20,7 @@ You receive:
 - `consensus_challenge`: from DEVIL'S ADVOCATE OUTPUT
 - `overall_assessment`: from DEVIL'S ADVOCATE OUTPUT
 - `ranked_sources`: from RELEVANCE FILTER OUTPUT (all sources with keep: true). Each entry carries `title`, `author`, `date`, and `key_claims` — use these to build the References section (Title — Author — URL — credibility) and to cite factual claims accurately.
-- `sources_in`: total source count across all scouts (passed from RELEVANCE FILTER OUTPUT)
+- `sources_in`: count of sources that passed verification (verdict accept or accept_with_caution) and reached the relevance filter (passed from RELEVANCE FILTER OUTPUT). Note: this excludes rejected sources, so for the "Sources reviewed" header use the broader scout total if you want all-scout count, otherwise label it "Sources considered".
 - `sources_out`: count of sources with keep: true (passed from RELEVANCE FILTER OUTPUT)
 - `verified_source_count`: count of sources with verdict: accept (score ≥ 3) from SOURCE VERIFIER OUTPUT — use for the "Sources verified" header field
 

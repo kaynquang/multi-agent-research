@@ -7,7 +7,7 @@
 
 ## Checkpoint B — After Phase 4 (Source Verification + Filtering)
 **Trigger:** ANY of the following:
-- `verified_sources` count < 3
+- Count of `verdict: accept` sources (credibility score ≥ 3) is below the depth-based minimum in the "Minimum Source Requirements by Depth" table below (quick=3, standard=5, deep=8)
 - `overall_confidence: low` from source-verifier
 - All 4 scout outputs are empty
 
